@@ -60,8 +60,8 @@ func main() {
 				handlers.GetBannerStatus(w, r, db)
 			}
 		case http.MethodPut:
-			if strings.HasSuffix(r.URL.Path, "/edit") {
-
+			if strings.HasSuffix(r.URL.Path, "/status") {
+				handlers.ChangeTenderStatus(w, r, db)
 			}
 
 		default:

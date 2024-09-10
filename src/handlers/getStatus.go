@@ -52,7 +52,5 @@ func GetBannerStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 	}
 
-	// Возвращаем статус тендера в ответе
-
 	json.NewEncoder(w).Encode(status)
 }
