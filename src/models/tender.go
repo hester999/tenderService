@@ -13,6 +13,7 @@ type Tender struct {
 	ServiceType     string    `json:"serviceType"`
 	Version         int       `json:"version"`
 	CreatedAt       string    `json:"createdAt"`
+	UpdatedAt       string
 	OrganizationId  uuid.UUID `json:"organizationId"`
 	CreatorUserId   uuid.UUID
 	CreatorUsername string `json:"creatorUsername"`

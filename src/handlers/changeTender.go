@@ -67,7 +67,7 @@ func ChangeTender(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		ServiceType: tender.ServiceType,
 		Status:      tender.Status,
 		Version:     tender.Version,
-		CreatedAt:   tender.CreatedAt,
+		CreatedAt:   tender.UpdatedAt,
 	}
 	json.NewEncoder(w).Encode(resp)
 	return
