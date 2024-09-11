@@ -6,16 +6,14 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"src/database"
+	"src/internal"
 	"src/models"
-	"strings"
 )
 
 func GetBannerStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// Извлекаем ID тендера из URL
-	strId := r.URL.Path
-	strId = strings.TrimPrefix(strId, "/api/tenders/")
-	strId = strings.TrimSuffix(strId, "/status")
+	strId := internal.GetTenderId(r.URL.Path)
 
 	// Извлекаем username из параметров запроса
 	user := r.URL.Query().Get("username")

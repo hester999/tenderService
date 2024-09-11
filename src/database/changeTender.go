@@ -13,12 +13,13 @@ func checkTender(db *sql.DB, id uuid.UUID) bool {
 	var status bool
 	_ = db.QueryRow(query, id).Scan(&status)
 	if status == false {
+
 		return status
 	}
 	return true
 }
 func getTenderData(db *sql.DB, id uuid.UUID, tender *models.Tender) error {
-	// SQL запрос для получения данных о тендере
+
 	query := `SELECT id, name, description, service_type, status, organization_id, creator_user_id, creator_username, version, created_at 
               FROM tender 
               WHERE id = $1`
@@ -31,13 +32,12 @@ func getTenderData(db *sql.DB, id uuid.UUID, tender *models.Tender) error {
 		&tender.ServiceType,
 		&tender.Status,
 		&tender.OrganizationId,
-		&tender.,
+		&tender.CreatorUserId,
 		&tender.CreatorUsername,
 		&tender.Version,
 		&tender.CreatedAt,
 	)
 
-	// Обработка возможной ошибки при выполнении запроса
 	if err != nil {
 		return fmt.Errorf("error fetching tender data: %v", err)
 	}
@@ -45,13 +45,39 @@ func getTenderData(db *sql.DB, id uuid.UUID, tender *models.Tender) error {
 	return nil
 }
 
-
-func ChangeTender(db *sql.DB, id uuid.UUID, tender *models.Tender, resp *models.TenderResponse) error {
+func ChangeTender(db *sql.DB, id uuid.UUID, tender *models.Tender, user string) (uuid.UUID, error) {
 	tempTender := models.Tender{}
-	err := checkTender(db, id)
-	if err != false {
-		return fmt.Errorf("tender not  found")
+	if !checkTender(db, id) {
+		return uuid.Nil, fmt.Errorf("tender not found")
 	}
-	getTenderData(db, id,&tempTender)
-	return nil
+
+	if err := getTenderData(db, id, &tempTender); err != nil {
+		return uuid.Nil, fmt.Errorf("failed to get tender data: %v", err)
+	}
+
+	if tender.Name == "" {
+		tender.Name = tempTender.Name
+	}
+	if tender.Description == "" {
+		tender.Description = tempTender.Description
+	}
+	if tender.Status == "" {
+		tender.Status = tempTender.Status
+	}
+	if tender.ServiceType == "" {
+		tender.ServiceType = tempTender.ServiceType
+	}
+
+	tender.CreatorUsername = user
+
+	tender.OrganizationId = tempTender.OrganizationId
+	tender.CreatorUserId = tempTender.CreatorUserId
+
+	tender.Version = tempTender.Version + 1
+	tenderID, err := AddNewTender(db, tender)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("failed to add new tender version: %v", err)
+	}
+
+	return tenderID, nil
 }

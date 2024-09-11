@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"src/database"
 	"src/handlers"
+	"src/internal"
 	"strings"
 )
 
@@ -62,12 +64,22 @@ func main() {
 		case http.MethodPut:
 			if strings.HasSuffix(r.URL.Path, "/status") {
 				handlers.ChangeTenderStatus(w, r, db)
+			} else {
+				version, isDigit := internal.IntIsLast(r.URL.Path)
+				if isDigit {
+					if version < 1 {
+						w.WriteHeader(http.StatusBadRequest)
+						json.NewEncoder(w).Encode("invalid version")
+						return
+					}
+					handlers.TenderRollBack(w, r, db, version)
+				}
 			}
+
 		case http.MethodPatch:
 			if strings.HasSuffix(r.URL.Path, "/edit") {
 				handlers.ChangeTender(w, r, db)
 			}
-
 		default:
 			http.Error(w, "Unsupported method", http.StatusBadRequest)
 			return

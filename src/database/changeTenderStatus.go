@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/google/uuid"
+	"src/internal"
 	"src/models"
 	"time"
 )
@@ -20,13 +21,13 @@ func ChangeTenderStatus(db *sql.DB, tender *models.TenderResponse, id uuid.UUID,
 	}
 
 	// Проверяем права пользователя
-	err = ValidatePermission(db, user, organizationID)
+	err = internal.ValidatePermission(db, user, organizationID)
 	if err != nil {
 		return fmt.Errorf("permission denied: %v", err)
 	}
 
 	// Проверяем, существует ли пользователь
-	err = ValidateUser(db, user)
+	err = internal.ValidateUser(db, user)
 	if err != nil {
 		return fmt.Errorf("user not found or does not exist")
 	}

@@ -14,7 +14,8 @@ type Tender struct {
 	Version         int       `json:"version"`
 	CreatedAt       string    `json:"createdAt"`
 	OrganizationId  uuid.UUID `json:"organizationId"`
-	CreatorUsername string    `json:"creatorUsername"`
+	CreatorUserId   uuid.UUID
+	CreatorUsername string `json:"creatorUsername"`
 }
 
 func (t *Tender) ValidateChangeFiled() error {

@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"src/database"
+	"src/internal"
 	"src/models"
-	"strings"
 )
 
 func validateStatus(tenderStatus []string, validTenderStatus map[string]bool) error {
@@ -20,14 +20,6 @@ func validateStatus(tenderStatus []string, validTenderStatus map[string]bool) er
 	return nil
 }
 
-func getTenderId(url string) string {
-
-	url = strings.TrimPrefix(url, "/api/tenders/")
-	url = strings.TrimSuffix(url, "/status")
-
-	return url
-
-}
 func ChangeTenderStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	resp := models.TenderResponse{}
@@ -39,11 +31,12 @@ func ChangeTenderStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		"Closed":    true,
 	}
 
-	idStr := getTenderId(r.URL.Path)
+	idStr := internal.GetTenderId(r.URL.Path)
 	id, _ := uuid.Parse(idStr)
 
 	status := r.URL.Query().Get("status")
 	user := r.URL.Query().Get("username")
+	fmt.Println(user)
 	err := validateStatus([]string{status}, avaliibleTenderStatus)
 	if user == "" {
 		w.WriteHeader(http.StatusBadRequest)
