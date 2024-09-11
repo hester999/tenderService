@@ -17,6 +17,27 @@ type Tender struct {
 	CreatorUsername string    `json:"creatorUsername"`
 }
 
+func (t *Tender) ValidateChangeFiled() error {
+	if t.Version != 0 || t.CreatedAt != "" || t.OrganizationId != uuid.Nil || t.CreatorUsername != "" {
+		fields := []string{}
+		if t.Version != 0 {
+			fields = append(fields, "Version")
+		}
+		if t.CreatedAt != "" {
+			fields = append(fields, "CreatedAt")
+		}
+		if t.OrganizationId != uuid.Nil {
+			fields = append(fields, "OrganizationId")
+		}
+		if t.CreatorUsername != "" {
+			fields = append(fields, "CreatorUsername")
+		}
+		return fmt.Errorf("these fields cannot be modified: %v", fields)
+	}
+	return nil
+
+}
+
 func (t *Tender) Validate() error {
 	if t.Name == "" {
 		return fmt.Errorf("name is required")

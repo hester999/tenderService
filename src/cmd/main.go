@@ -63,6 +63,10 @@ func main() {
 			if strings.HasSuffix(r.URL.Path, "/status") {
 				handlers.ChangeTenderStatus(w, r, db)
 			}
+		case http.MethodPatch:
+			if strings.HasSuffix(r.URL.Path, "/edit") {
+				handlers.ChangeTender(w, r, db)
+			}
 
 		default:
 			http.Error(w, "Unsupported method", http.StatusBadRequest)
