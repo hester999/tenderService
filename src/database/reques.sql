@@ -21,7 +21,7 @@ CREATE TABLE tender_history (
 delete from tender where name = 'тест';
 --
 --
-select  * from  tender_history;
+select  * from  tender_history ;
 
 
 select  * from employee;

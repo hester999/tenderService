@@ -22,7 +22,7 @@ func ChangeTender(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	err := internal.ValidateUser(db, user)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Reason: "user not found"})
 		return
 	}
