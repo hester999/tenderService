@@ -39,6 +39,11 @@ func TenderRollBack(w http.ResponseWriter, r *http.Request, db *sql.DB, version 
 
 	err = database.TenderRollBack(db, id, user, &tender, version)
 
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(models.ErrorResponse{Reason: err.Error()})
+		return
+	}
 	resp := models.TenderResponse{
 		Id:          tender.Id.String(),
 		Name:        tender.Name,

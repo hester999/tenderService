@@ -11,7 +11,6 @@ func IntIsLast(url string) (int, bool) {
 
 	res := url[len(url)-1:]
 
-	// Пытаемся преобразовать последний символ в число
 	digit, err := strconv.Atoi(res)
 	if err != nil {
 		return 0, false

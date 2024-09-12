@@ -13,21 +13,18 @@ func CreateTender(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	tender := models.Tender{}
 
-	// Декодируем запрос в структуру Tender
 	if err := json.NewDecoder(r.Body).Decode(&tender); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Reason: "Invalid request payload"})
 		return
 	}
 
-	// Валидация полей
 	if err := tender.Validate(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Reason: err.Error()})
 		return
 	}
 
-	// Создаём новый тендер
 	tenderID, err := database.AddNewTender(db, &tender)
 	if err != nil {
 		if err.Error() == "user does not exist" {
@@ -45,7 +42,6 @@ func CreateTender(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 	}
 
-	// Формируем успешный ответ
 	response := models.TenderResponse{
 		Id:          tenderID.String(), // Преобразование UUID в строку
 		Name:        tender.Name,

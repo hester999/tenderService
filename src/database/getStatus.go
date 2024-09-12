@@ -8,7 +8,6 @@ import (
 
 func GetTenderStatus(db *sql.DB, tenderId uuid.UUID, creator string) (string, error) {
 
-	// Проверяем, существует ли пользователь
 	var userExists bool
 	userQuery := "SELECT EXISTS(SELECT 1 FROM employee WHERE username = $1)"
 	err := db.QueryRow(userQuery, creator).Scan(&userExists)
@@ -19,7 +18,6 @@ func GetTenderStatus(db *sql.DB, tenderId uuid.UUID, creator string) (string, er
 		return "", fmt.Errorf("user not found")
 	}
 
-	// Запрашиваем статус тендера, проверяя, что переданный username является создателем
 	query := "SELECT status FROM tender WHERE id = $1 AND creator_username = $2"
 	row := db.QueryRow(query, tenderId, creator)
 

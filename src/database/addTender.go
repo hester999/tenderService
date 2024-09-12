@@ -11,7 +11,6 @@ import (
 
 func AddNewTender(db *sql.DB, tender *models.Tender) (uuid.UUID, error) {
 
-	// Проверяем, есть ли у пользователя права на создание тендера
 	err := internal.ValidatePermission(db, tender.CreatorUsername, tender.OrganizationId)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("permission denied: %v", err)
@@ -28,7 +27,6 @@ func AddNewTender(db *sql.DB, tender *models.Tender) (uuid.UUID, error) {
 		return uuid.Nil, fmt.Errorf("failed to find user with username %s: %v", tender.CreatorUsername, err)
 	}
 
-	// Вставляем новый тендер и возвращаем его id и created_at
 	if tender.Version == 0 {
 		tender.Version = 1
 	}
@@ -45,7 +43,6 @@ func AddNewTender(db *sql.DB, tender *models.Tender) (uuid.UUID, error) {
 		return uuid.Nil, fmt.Errorf("failed to insert tender: %v", err)
 	}
 
-	// Присваиваем полученные значения в структуру тендера
 	tender.CreatedAt = createdAt.Format(time.RFC3339)
 
 	return tenderID, nil

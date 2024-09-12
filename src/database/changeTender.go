@@ -21,7 +21,6 @@ func ChangeTender(db *sql.DB, id uuid.UUID, updates *models.Tender, user string)
 		return uuid.Nil, err
 	}
 
-	// Save current state to history
 	if err := saveCurrentTenderToHistory(db, &current); err != nil {
 		return uuid.Nil, fmt.Errorf("failed to save current tender to history: %v", err)
 	}
@@ -44,12 +43,11 @@ func ChangeTender(db *sql.DB, id uuid.UUID, updates *models.Tender, user string)
 
 	updates.OrganizationId = current.OrganizationId
 	updates.CreatorUserId = current.CreatorUserId
-	// Increment version and update updated_at
+
 	current.Version++
 	updates.Version = current.Version
 	updates.UpdatedAt = time.Now().Format(time.RFC3339)
 
-	// Update the tender in the database
 	query := `UPDATE tender SET name=$1, description=$2, service_type=$3, status=$4, version=$5, updated_at=$6, creator_username=$7
               WHERE id=$8 RETURNING id`
 	var tenderID uuid.UUID

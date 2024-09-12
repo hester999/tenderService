@@ -12,10 +12,8 @@ import (
 
 func GetBannerStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-	// Извлекаем ID тендера из URL
 	strId := internal.GetTenderId(r.URL.Path)
 
-	// Извлекаем username из параметров запроса
 	user := r.URL.Query().Get("username")
 
 	if user == "" {
@@ -24,7 +22,6 @@ func GetBannerStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// Преобразуем ID тендера в UUID
 	tenderId, err := uuid.Parse(strId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -32,7 +29,6 @@ func GetBannerStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// Получаем статус тендера
 	status, err := database.GetTenderStatus(db, tenderId, user)
 	if err != nil {
 		if err.Error() == "user not found" {

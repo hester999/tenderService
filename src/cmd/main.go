@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"src/database"
 	"src/handlers"
 	"src/internal"
@@ -18,6 +19,11 @@ func main() {
 		return
 	}
 	defer db.Close()
+
+	serverAddress := os.Getenv("SERVER_ADDRESS")
+	if serverAddress == "" {
+		serverAddress = "localhost:8080"
+	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello World")
@@ -85,5 +91,8 @@ func main() {
 			return
 		}
 	})
-	http.ListenAndServe(":8080", nil)
+	fmt.Printf("Starting server on %s\n", serverAddress)
+	if err := http.ListenAndServe(serverAddress, nil); err != nil {
+		fmt.Printf("Error starting server: %v\n", err)
+	}
 }

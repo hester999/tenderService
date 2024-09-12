@@ -20,19 +20,16 @@ func ChangeTenderStatus(db *sql.DB, tender *models.TenderResponse, id uuid.UUID,
 		return fmt.Errorf("failed to fetch organization id: %v", err)
 	}
 
-	// Проверяем права пользователя
 	err = internal.ValidatePermission(db, user, organizationID)
 	if err != nil {
 		return fmt.Errorf("permission denied: %v", err)
 	}
 
-	// Проверяем, существует ли пользователь
 	err = internal.ValidateUser(db, user)
 	if err != nil {
 		return fmt.Errorf("user not found or does not exist")
 	}
 
-	// Выполняем обновление статуса и версии тендера
 	query := `
 		UPDATE tender 
 		SET status = $1, updated_at = CURRENT_TIMESTAMP
@@ -40,7 +37,6 @@ func ChangeTenderStatus(db *sql.DB, tender *models.TenderResponse, id uuid.UUID,
 		RETURNING id, name, description, service_type, status, version, updated_at
 	`
 
-	// Получаем обновленные данные из базы данных для формирования ответа
 	var updatedAt time.Time
 	err = db.QueryRow(query, status, id).Scan(
 		&tender.Id,

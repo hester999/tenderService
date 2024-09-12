@@ -26,7 +26,6 @@ func getTenderData(db *sql.DB, id uuid.UUID, tender *models.Tender) error {
               FROM tender 
               WHERE id = $1`
 
-	// Выполнение запроса и сканирование результатов непосредственно в структуру tender
 	err := db.QueryRow(query, id).Scan(
 		&tender.Id,
 		&tender.Name,
@@ -62,7 +61,6 @@ func GetDataFromHistoryTender(db *sql.DB, id uuid.UUID, tender *models.Tender, v
               FROM tender_history 
               WHERE tender_id = $1 and version = $2`
 
-	// Выполнение запроса и сканирование результатов непосредственно в структуру tender
 	err := db.QueryRow(query, id, version).Scan(
 		&tender.Id,
 		&tender.Name,
