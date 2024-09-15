@@ -27,7 +27,6 @@ func GetTenderByUser(db *sql.DB, tender *models.ResponseGetBanner) error {
 	for rows.Next() {
 		var t models.Tender
 
-		// Изменено: id теперь обрабатывается как UUID
 		err = rows.Scan(&t.Id, &t.Name, &t.Description, &t.Status, &t.ServiceType, &t.Version, &t.CreatedAt)
 		if err != nil {
 			return err

@@ -11,7 +11,6 @@ import (
 	_ "strings"
 )
 
-// добавить проверку на все аргументы в url
 func validateServiceTypes(serviceTypes []string, validServiceTypes map[string]bool) error {
 	for _, serviceType := range serviceTypes {
 		if _, exists := validServiceTypes[serviceType]; !exists {
@@ -70,9 +69,9 @@ func GetTender(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	var response []models.TenderResponse
 	for _, t := range tender.Tenders {
-		// UUID уже имеет правильный тип, поэтому конвертация в строку происходит здесь
+
 		tr := models.TenderResponse{
-			Id:          t.Id.String(), // Преобразуем UUID в строку
+			Id:          t.Id.String(),
 			Name:        t.Name,
 			Description: t.Description,
 			Status:      t.Status,

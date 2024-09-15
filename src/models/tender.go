@@ -6,15 +6,17 @@ import (
 )
 
 type Tender struct {
-	Id              uuid.UUID `json:"id"` // Изменено на UUID
+	Id              uuid.UUID `json:"id"`
 	Name            string    `json:"name"`
 	Description     string    `json:"description"`
 	Status          string    `json:"status"`
 	ServiceType     string    `json:"serviceType"`
 	Version         int       `json:"version"`
 	CreatedAt       string    `json:"createdAt"`
+	UpdatedAt       string
 	OrganizationId  uuid.UUID `json:"organizationId"`
-	CreatorUsername string    `json:"creatorUsername"`
+	CreatorUserId   uuid.UUID
+	CreatorUsername string `json:"creatorUsername"`
 }
 
 func (t *Tender) ValidateChangeFiled() error {
@@ -46,12 +48,12 @@ func (t *Tender) Validate() error {
 		return fmt.Errorf("description is required")
 	}
 	if t.Status == "" {
-		return fmt.Errorf("status is required")
+		t.Status = "Created"
 	}
 	if t.ServiceType == "" {
 		return fmt.Errorf("serviceType is required")
 	}
-	if t.OrganizationId == uuid.Nil { // Исправлено: проверка на пустой UUID
+	if t.OrganizationId == uuid.Nil {
 		return fmt.Errorf("organizationId is required")
 	}
 	if t.CreatorUsername == "" {
@@ -79,7 +81,7 @@ type TenderResponse struct {
 	Description string `json:"description"`
 	Status      string `json:"status"`
 	ServiceType string `json:"serviceType"`
-	Version     int    `json:"version"` // Исправлено: правильно написано "version"
+	Version     int    `json:"version"`
 	CreatedAt   string `json:"createdAt"`
 }
 
