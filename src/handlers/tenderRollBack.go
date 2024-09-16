@@ -11,12 +11,11 @@ import (
 	"src/models"
 )
 
-// todo доделать ообработку всех ошибок
 func TenderRollBack(w http.ResponseWriter, r *http.Request, db *sql.DB, version int) {
 	tender := models.Tender{}
 	w.Header().Set("Content-Type", "application/json")
 
-	idStr := internal.GetTenderId(r.URL.Path)
+	idStr := internal.GetIdFromURL(r.URL.Path)
 	id, _ := uuid.Parse(idStr)
 	fmt.Println(id)
 	user := r.URL.Query().Get("username")

@@ -4,7 +4,7 @@ import (
 	"regexp"
 )
 
-func GetTenderId(url string) string {
+func GetIdFromURL(url string) string {
 
 	re := regexp.MustCompile(`[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}`)
 

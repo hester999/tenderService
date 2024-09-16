@@ -59,13 +59,13 @@ func ChangeBidStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	avaliibleTenderStatus := map[string]bool{
+	avaliibleBidStatus := map[string]bool{
 		"Created":   true,
 		"Published": true,
 		"Closed":    true,
 	}
 
-	idStr := internal.GetTenderId(r.URL.Path)
+	idStr := internal.GetIdFromURL(r.URL.Path)
 	id, _ := uuid.Parse(idStr)
 
 	status := r.URL.Query().Get("status")
@@ -98,7 +98,7 @@ func ChangeBidStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	err = validateStatus([]string{status}, avaliibleTenderStatus)
+	err = internal.ValidateStatus([]string{status}, avaliibleBidStatus)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

@@ -13,7 +13,7 @@ import (
 func GetBidStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	w.Header().Set("Content-Type", "application/json")
 
-	strId := internal.GetTenderId(r.URL.Path)
+	strId := internal.GetIdFromURL(r.URL.Path)
 
 	user := r.URL.Query().Get("username")
 

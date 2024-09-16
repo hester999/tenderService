@@ -13,7 +13,7 @@ import (
 func ChangeTender(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	w.Header().Set("Content-Type", "application/json")
 
-	idStr := internal.GetTenderId(r.URL.Path)
+	idStr := internal.GetIdFromURL(r.URL.Path)
 	id, _ := uuid.Parse(idStr)
 
 	tender := models.Tender{}

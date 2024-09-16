@@ -3,22 +3,12 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"github.com/google/uuid"
 	"net/http"
 	"src/database"
 	"src/internal"
 	"src/models"
 )
-
-func validateStatus(tenderStatus []string, validTenderStatus map[string]bool) error {
-	for _, tenderStatus := range tenderStatus {
-		if _, exists := validTenderStatus[tenderStatus]; !exists {
-			return fmt.Errorf("Invalid tender status  provided. Available values: Created, Published, Closed")
-		}
-	}
-	return nil
-}
 
 func ChangeTenderStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
@@ -31,13 +21,13 @@ func ChangeTenderStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		"Closed":    true,
 	}
 
-	idStr := internal.GetTenderId(r.URL.Path)
+	idStr := internal.GetIdFromURL(r.URL.Path)
 	id, _ := uuid.Parse(idStr)
 
 	status := r.URL.Query().Get("status")
 	user := r.URL.Query().Get("username")
 
-	err := validateStatus([]string{status}, avaliibleTenderStatus)
+	err := internal.ValidateStatus([]string{status}, avaliibleTenderStatus)
 	if user == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		errResp := models.ErrorResponse{Reason: "Invalid username provided"}

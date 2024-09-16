@@ -22,6 +22,7 @@ type Tender struct {
 func (t *Tender) ValidateChangeFiled() error {
 	if t.Version != 0 || t.CreatedAt != "" || t.OrganizationId != uuid.Nil || t.CreatorUsername != "" {
 		fields := []string{}
+
 		if t.Version != 0 {
 			fields = append(fields, "Version")
 		}

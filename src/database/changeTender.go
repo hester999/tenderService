@@ -25,7 +25,6 @@ func ChangeTender(db *sql.DB, id uuid.UUID, updates *models.Tender, user string)
 		return uuid.Nil, fmt.Errorf("failed to save current tender to history: %v", err)
 	}
 
-	// Update fields only if provided in the request
 	if updates.Name == "" {
 		updates.Name = current.Name
 	}

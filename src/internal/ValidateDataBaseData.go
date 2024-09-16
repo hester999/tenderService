@@ -76,3 +76,17 @@ func ValidateTenderId(db *sql.DB, tenderId uuid.UUID) error {
 	return nil
 
 }
+
+//func ValidateBidId(db *sql.DB, id uuid.UUID) error{
+//	var exist bool
+//	query:= "SELECT EXISTS(SELECT id FROM bid WHERE id = $1)"
+//
+//	err := db.QueryRow(query,id).Scan(&exist)
+//	if err != nil{
+//		return fmt.Errorf("error checking bid existence: %w", err)
+//	}
+//	if !exist {
+//		return errors.New("bid not found")
+//	}
+//	return  nil
+//}

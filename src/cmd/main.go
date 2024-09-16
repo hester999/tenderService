@@ -60,6 +60,21 @@ func main() {
 		case http.MethodPut:
 			if strings.HasSuffix(r.URL.Path, "/status") {
 				handlers.ChangeBidStatus(w, r, db)
+			} else {
+				version, isDigit := internal.IntIsLast(r.URL.Path)
+				if isDigit {
+					if version < 1 {
+						w.WriteHeader(http.StatusBadRequest)
+						json.NewEncoder(w).Encode("invalid version")
+						return
+					}
+					handlers.BidRollBack(w, r, db, version)
+				}
+			}
+
+		case http.MethodPatch:
+			if strings.HasSuffix(r.URL.Path, "/edit") {
+				handlers.UpdateBid(w, r, db)
 			}
 		default:
 			http.Error(w, "Unsupported method", http.StatusBadRequest)

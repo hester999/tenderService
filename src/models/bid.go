@@ -73,6 +73,31 @@ func (b *Bid) ValidateFields() error {
 	return nil
 }
 
+func (b *Bid) ValidateChangeFields() error {
+
+	if b.OrganizationId != uuid.Nil {
+		return errors.New("OrganizationId cannot be changed")
+	}
+
+	if b.CreatorUserId != uuid.Nil {
+		return errors.New("CreatorUserId cannot be changed")
+	}
+
+	if b.AuthorType != "" {
+		return errors.New("AuthorType cannot be changed")
+	}
+
+	if b.AuthorId != uuid.Nil {
+		return errors.New("AuthorId cannot be changed")
+	}
+
+	if b.Version != 0 {
+		return errors.New("Version cannot be changed")
+	}
+
+	return nil
+}
+
 type ResponseGetBid struct {
 	Bid    []Bid `json:"bids"`
 	Offset int
